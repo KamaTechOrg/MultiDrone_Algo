@@ -1,7 +1,7 @@
 import importlib
 import os
 # Import the module dynamically
-detectron2_evaluation_module = importlib.import_module("detectron2-evaluation")
+detectron2_evaluation_module = importlib.import_module("detectron2-gpu-utilization-evaluation")
 
 # Access the function from the module
 detectron2_evaluation = getattr(detectron2_evaluation_module, "detectron2_evaluation")
