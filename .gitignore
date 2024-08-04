@@ -1,5 +1,5 @@
 # Ignore all files in the evaluation directory
-evaluation/*
+training
 
 # Optional: Un-ignore specific files or directories within evaluation
 # !evaluation/some-important-file.txt
