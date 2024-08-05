@@ -7,7 +7,7 @@ detectron2_evaluation_module = importlib.import_module("detectron2-gpu-utilizati
 detectron2_evaluation = getattr(detectron2_evaluation_module, "detectron2_evaluation")
 
 
-PATH_TO_DATA="my-data"
+PATH_TO_DATA="data_for_evaluation"
 
 if __name__=='__main__':
     # print the accuracy

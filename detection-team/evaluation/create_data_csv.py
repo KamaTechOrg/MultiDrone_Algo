@@ -49,8 +49,9 @@ def create_csv(labels_dir, image_dir, output_csv):
     df.to_csv(output_csv, index=False)
     print(f"CSV file '{output_csv}' created successfully.")
 
-# Function to generate CSV file for the dataset
-def make_csv(path_to_data):
+#generate CSV file for the dataset
+if __name__=='__main__':
+    path_to_data="data_for_evaluation"
     labels_directory = path_to_data + "/labels"  # Path to labels directory
     image_directory = path_to_data + "/images"  # Path to images directory
     output_csv_file = "bounding_boxes_with_labels.csv"  # Output CSV file name
