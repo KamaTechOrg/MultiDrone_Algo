@@ -95,8 +95,8 @@ def ablation_study():
         model = load_loftr(device, pretrained=pretrained, weights_path=weights_path)
         
         # Load your images from local paths
-        img1_path = './images/image3.jpg'  # Replace with your image path
-        img2_path = './images/image4.jpg'  # Replace with your image path
+        img1_path = './images/image3.jpg'  
+        img2_path = './images/image4.jpg'  
         img1 = load_image(img1_path).to(device)
         img2 = load_image(img2_path).to(device)
 
