@@ -43,7 +43,6 @@ def match_images(img1, img2, model, device):
         
         if img1.dim() != 4 or img2.dim() != 4:
             raise ValueError(f"Expected 4D input, but got shapes {img1.shape} and {img2.shape}")
-
         matches = model({'image0': img1, 'image1': img2})
         print(f"Number of matches: {len(matches['keypoints0'])}")
     return matches
@@ -81,7 +80,6 @@ def visualize_matches(img1, img2, matches):
 
 def ablation_study():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(PerformanceChecker.check_gpu())
     
     # Define configurations for ablation study
     pretrained_options = {
@@ -102,16 +100,14 @@ def ablation_study():
 
         matches = match_images(img1, img2, model, device)
         
-        inference_time = PerformanceChecker.measure_inference_time(model, {'image0': img1, 'image1': img2}, device)
-        print(inference_time)
         
-        gpu_performance = PerformanceChecker.check_gpu_performance_and_memory(model, [(img1, img2)])
+        gpu_performance = PerformanceChecker.check_gpu_performance_and_memory(model, [(img1, img2)], device)
         print("GPU Performance metrics:")
         print(f"GPU Time: {gpu_performance['GPU Time (s)']} seconds")
         print(f"GPU Memory Usage: {gpu_performance['GPU Memory Usage (MB)']} MB")
         print(f"Peak GPU Memory Usage: {gpu_performance['Peak GPU Memory Usage (MB)']} MB")
         
-        visualize_matches(img1.squeeze(0).cpu(), img2.squeeze(0).cpu(), matches)
+        visualize_matches(img1, img2, matches)
         break
 
 if __name__ == "__main__":
