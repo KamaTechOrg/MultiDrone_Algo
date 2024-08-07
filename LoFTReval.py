@@ -98,7 +98,7 @@ def ablation_study():
         img1 = load_image(img1_path).to(device)
         img2 = load_image(img2_path).to(device)
 
-        matches = match_images(img1, img2, model, device)
+        # matches = match_images(img1, img2, model, device)
         
         
         gpu_performance = PerformanceChecker.check_gpu_performance_and_memory(model, [(img1, img2)], device)
@@ -107,7 +107,7 @@ def ablation_study():
         print(f"GPU Memory Usage: {gpu_performance['GPU Memory Usage (MB)']} MB")
         print(f"Peak GPU Memory Usage: {gpu_performance['Peak GPU Memory Usage (MB)']} MB")
         
-        visualize_matches(img1, img2, matches)
+        # visualize_matches(img1, img2, matches)
         break
 
 if __name__ == "__main__":
