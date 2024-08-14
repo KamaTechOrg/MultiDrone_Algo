@@ -1,19 +1,6 @@
-import detectron2
-from detectron2.utils.logger import setup_logger
-setup_logger()
-from detectron2 import model_zoo
-from detectron2.engine import DefaultTrainer
-from detectron2.engine import DefaultPredictor
-from detectron2.config import get_cfg
-from detectron2.utils.visualizer import Visualizer
-from detectron2.structures import BoxMode
-from detectron2.data import DatasetCatalog, MetadataCatalog
-from detectron2.evaluation import COCOEvaluator, inference_on_dataset, LVISEvaluator
-from detectron2.data import build_detection_test_loader
-from detectron2.utils.visualizer import ColorMode
+
 import cv2
-import torch, torchvision
-import torchvision.transforms as transforms
+
 from pathlib import Path
 import json
 from sklearn.model_selection import train_test_split
@@ -36,9 +23,7 @@ import pandas as pd
 import time
 import sys
 import importlib
-from detectron2_for_evaluation.config import get_cfg
-from detectron2_for_evaluation.engine.defaults import DefaultPredictor
-from detectron2_for_evaluation import model_zoo
+
 from utils import initialize_csv, parse_nvidia_smi_output, append_to_csv
 from classes_utils import BoundingBox,OutputObject
 
