@@ -36,13 +36,32 @@ import pandas as pd
 import time
 import sys
 import importlib
-
-
 from detectron2_for_evaluation.config import get_cfg
 from detectron2_for_evaluation.engine.defaults import DefaultPredictor
 from detectron2_for_evaluation import model_zoo
-
 from utils import initialize_csv, parse_nvidia_smi_output, append_to_csv
+
+
+
+class BoundingBox():
+    def __init__(self, xmin, ymin, xmax, ymax) -> None:
+        self.__xmin=xmin
+        self.__ymin=ymin
+        self.__xmax=xmax
+        self.__ymax=ymax
+    
+    def get_bbox(self):
+        return (self.__xmin,self.__ymin,self.__xmax,self.__ymax)
+
+
+class OutputObject():
+    def __init__(self, image_path:str, category_id:int, bboxes:list[BoundingBox]):
+        self.__image_path=image_path
+        self.__category_id=category_id
+        self.bboxes=bboxes
+    
+
+
 
 
 
@@ -56,7 +75,7 @@ class EvaluationMetrics(metaclass=abc.ABCMeta):
     
     #predict using self.__predictor the self.__labels_path of the self.__images_path
     @abc.abstractmethod
-    def predict(self,one=False, image_path="")->list:
+    def predict(self,one=False, image_path="")->list[OutputObject]:
         pass
         #implement according to you model
 
@@ -115,16 +134,16 @@ class EvaluationMetrics(metaclass=abc.ABCMeta):
         ground_truth=self.load_ground_truth(csv_file)
         for image_name, gt_boxes in list(ground_truth.items())[:100]:
             # image_path = os.path.join(self.__images_path)
-            predictions = self.predict(one=True, image_path=image_name)[0]
+            prediction = self.predict(one=True, image_path=image_name)[0]
             
-            pred_boxes = predictions.pred_boxes.tensor.numpy()
+            pred_boxes = prediction.bboxes
             
             # Check if any predictions overlap with ground truth
             for gt_box in gt_boxes:
                 gt_xmin, gt_ymin, gt_xmax, gt_ymax = gt_box
                 match_found = False
                 for pred_box in pred_boxes:
-                    if self.check_overlap((gt_xmin, gt_ymin, gt_xmax, gt_ymax), tuple(pred_box)):
+                    if self.check_overlap((gt_xmin, gt_ymin, gt_xmax, gt_ymax), tuple(pred_box.get_bbox())):
                         match_found = True
                         break
                 if match_found:
