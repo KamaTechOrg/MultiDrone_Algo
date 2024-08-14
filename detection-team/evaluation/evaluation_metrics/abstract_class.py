@@ -40,25 +40,10 @@ from detectron2_for_evaluation.config import get_cfg
 from detectron2_for_evaluation.engine.defaults import DefaultPredictor
 from detectron2_for_evaluation import model_zoo
 from utils import initialize_csv, parse_nvidia_smi_output, append_to_csv
+from classes_utils import BoundingBox,OutputObject
 
 
 
-class BoundingBox():
-    def __init__(self, xmin, ymin, xmax, ymax) -> None:
-        self.__xmin=xmin
-        self.__ymin=ymin
-        self.__xmax=xmax
-        self.__ymax=ymax
-    
-    def get_bbox(self):
-        return (self.__xmin,self.__ymin,self.__xmax,self.__ymax)
-
-
-class OutputObject():
-    def __init__(self, image_path:str, category_id:int, bboxes:list[BoundingBox]):
-        self.__image_path=image_path
-        self.__category_id=category_id
-        self.bboxes=bboxes
     
 
 
