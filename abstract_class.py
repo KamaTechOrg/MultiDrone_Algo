@@ -1,16 +1,16 @@
-import detectron2
-from detectron2.utils.logger import setup_logger
-setup_logger()
-from detectron2 import model_zoo
-from detectron2.engine import DefaultTrainer
-from detectron2.engine import DefaultPredictor
-from detectron2.config import get_cfg
-from detectron2.utils.visualizer import Visualizer
-from detectron2.structures import BoxMode
-from detectron2.data import DatasetCatalog, MetadataCatalog
-from detectron2.evaluation import COCOEvaluator, inference_on_dataset, LVISEvaluator
-from detectron2.data import build_detection_test_loader
-from detectron2.utils.visualizer import ColorMode
+# import detectron2
+# from detectron2.utils.logger import setup_logger
+# setup_logger()
+# from detectron2 import model_zoo
+# from detectron2.engine import DefaultTrainer
+# from detectron2.engine import DefaultPredictor
+# from detectron2.config import get_cfg
+# from detectron2.utils.visualizer import Visualizer
+# from detectron2.structures import BoxMode
+# from detectron2.data import DatasetCatalog, MetadataCatalog
+# from detectron2.evaluation import COCOEvaluator, inference_on_dataset, LVISEvaluator
+# from detectron2.data import build_detection_test_loader
+# from detectron2.utils.visualizer import ColorMode
 import cv2
 import torch, torchvision
 import torchvision.transforms as transforms
