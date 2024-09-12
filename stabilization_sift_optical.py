@@ -2,6 +2,15 @@ import cv2
 import numpy as np
 
 
+def moving_average_gaussian(curve, radius):
+    window_size = 2 * radius + 1
+    sigma = radius / 3
+    gaussian_filter = cv2.getGaussianKernel(window_size, sigma).flatten()
+    curve_pad = np.lib.pad(curve, (radius, radius), 'edge')
+    curve_smoothed = np.convolve(curve_pad, gaussian_filter, mode='same')
+    return curve_smoothed[radius:-radius]
+
+
 def moving_average(curve, radius):
     window_size = 2 * radius + 1
     f = np.ones(window_size) / window_size
@@ -58,8 +67,7 @@ def stabilize_video(input_path, output_path, smoothing_radius=50):
         prev_pts = np.float32([prev_kp[m.queryIdx].pt for m in matches]).reshape(-1, 1, 2)
         curr_pts = np.float32([curr_kp[m.trainIdx].pt for m in matches]).reshape(-1, 1, 2)
 
-        # Use Optical Flow to refine matches
-        curr_pts, status, _ = cv2.calcOpticalFlowPyrLK(prev_gray, curr_gray, prev_pts, None)
+        curr_pts, status, _ = cv2.calcOpticalFlowPyrLK(prev_gray, curr_gray, prev_pts, curr_pts)
         prev_pts = prev_pts[status == 1]
         curr_pts = curr_pts[status == 1]
 
