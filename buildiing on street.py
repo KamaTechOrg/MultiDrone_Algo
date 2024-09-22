@@ -153,3 +153,4 @@ for area in bpy.context.screen.areas:
 # Select all objects and adjust view
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.view3d.view_selected(use_all_regions=False)
+
