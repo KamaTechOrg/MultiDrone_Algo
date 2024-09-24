@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package stereo_vehicle;
+
+service ImageProcessing {
+  // Find the height of a pixel
+  rpc FindHeight(HeightRequest) returns (NumberResponse);
+
+  // Identify vehicle in a video
+  rpc IdentifyVehicle(IdentifyVehicleRequest) returns (BooleanArrayResponse);
+
+  // Control the background task and optionally send a video
+  rpc ControlThread(ControlRequest) returns (ControlResponse);
+
+  // Method to get the stabilized frame
+  rpc GetStabilizedFrame(Empty) returns (FrameResponse);
+}
+
+// Request for height calculation
+message HeightRequest {
+  bytes left_image = 1;      // Left stereo image (binary data)
+  bytes right_image = 2;     // Right stereo image (binary data)
+  int32 x = 3;               // X coordinate
+  int32 y = 4;               // Y coordinate
+  float focal_length = 5;     // Focal length
+  float baseline = 6;         // Baseline distance between cameras
+  float camera_height = 7;    // Camera height from the ground
+}
+
+// Request for vehicle identification
+message IdentifyVehicleRequest {
+  bytes image = 1;           // Reference image for the vehicle
+  bytes video = 2;           // Video containing vehicle (binary data)
+}
+
+// Request to control the background thread
+message ControlRequest {
+  bool activate = 1;         // Whether to activate the thread
+  bytes video = 2;           // Video data (binary) to send when activating
+}
+
+// Response indicating the result of the control action
+message ControlResponse {
+  string message = 1;
+}
+
+// Response returning a single number
+message NumberResponse {
+  float number = 1;
+}
+
+// Response returning a boolean array
+message BooleanArrayResponse {
+  repeated bool results = 1;
+}
+
+// Message for empty request
+message Empty {}
+
+// Response message containing the frame
+message FrameResponse {
+    bytes frame = 1; // The stabilized frame as binary data
+}

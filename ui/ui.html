@@ -1,0 +1,49 @@
+html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gRPC UI</title>
+</head>
+<body>
+    <h1>gRPC Server Interaction</h1>
+    <!-- העלאת תמונות לצורך חישוב גובה -->
+    <h2>Upload Stereo Images for Height Calculation</h2>
+    <form action="/run_find_height" method="POST" enctype="multipart/form-data">
+        <label for="left_image">Left Image:</label>
+        <input type="file" name="left_image" accept="image/*" required><br><br>
+        <label for="right_image">Right Image:</label>
+        <input type="file" name="right_image" accept="image/*" required><br><br>
+        <label for="x">X Coordinate:</label>
+        <input type="number" name="x" required><br><br>
+        <label for="y">Y Coordinate:</label>
+        <input type="number" name="y" required><br><br>
+        <label for="focal_length">Focal Length:</label>
+        <input type="number" step="any" name="focal_length" required><br><br>
+        <label for="baseline">Baseline:</label>
+        <input type="number" step="any" name="baseline" required><br><br>
+        <label for="camera_height">Camera Height:</label>
+        <input type="number" step="any" name="camera_height" required><br><br>
+        <input type="submit" value="Calculate Height">
+    </form>
+    <!-- העלאת סרטון לצורך זיהוי רכב -->
+    <h2>Upload Video for Vehicle Identification</h2>
+    <form action="/run_identify_vehicle" method="POST" enctype="multipart/form-data">
+        <label for="reference_image">Reference Image:</label>
+        <input type="file" name="reference_image" accept="image/*" required><br><br>
+        <label for="video">Video:</label>
+        <input type="file" name="video" accept="video/*" required><br><br>
+        <input type="submit" value="Identify Vehicle">
+    </form>
+    <!-- העלאת סרטון לצורך הפעלת ControlThread -->
+    <h2>Run ControlThread RPC</h2>
+    <form action="/run_control_thread" method="POST" enctype="multipart/form-data">
+        <label for="video">Video:</label>
+        <input type="file" name="video" accept="video/*" required><br><br>
+        <label for="activate">Activate Thread:</label>
+        <input type="checkbox" name="activate" value="true"><br><br>
+        <input type="submit" value="Run Control Thread">
+    </form>
+</body>
+</html>
