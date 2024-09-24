@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package stabilized_images;
+
+service ImageReceiver {
+  rpc GetStabilizedFrame(Empty) returns (FrameResponse);
+}
+
+message Empty {}
+
+message FrameResponse {
+    bytes frame = 1; // The stabilized frame as binary data
+}
