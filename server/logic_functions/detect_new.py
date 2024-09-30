@@ -1,9 +1,8 @@
-#best till here with registration show, works really good
-#Needs improvements with far car which is too small to recognize and also doesnt have all the 3d elements
 import cv2
 import os
 import numpy as np
 
+# Function to check if the car is present in the current frame
 def is_car_in_frame(car_image, frame, sift, bf, threshold=10):
     kp1, des1 = sift.detectAndCompute(car_image, None)
     kp2, des2 = sift.detectAndCompute(frame, None)
@@ -20,9 +19,10 @@ def is_car_in_frame(car_image, frame, sift, bf, threshold=10):
 
     return len(good_matches) >= threshold, kp1, kp2, good_matches
 
+# Function to process the video and check each frame for the presence of the car
 def process_video(video_path, car_image_path, output_folder, threshold=10, duration_sec=30):
     car_image = cv2.imread(car_image_path, cv2.IMREAD_GRAYSCALE)
-    car_image_color = cv2.imread(car_image_path)  # קריאה בצבע לצורך הצגה עם קווים
+    car_image_color = cv2.imread(car_image_path)  # Read in color for displaying lines
     
     cap = cv2.VideoCapture(video_path)
     
@@ -32,10 +32,10 @@ def process_video(video_path, car_image_path, output_folder, threshold=10, durat
     bool_array = []
     
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    max_frames = duration_sec * fps  # מספר הפריימים שנרצה לעבור עליהם (חצי דקה)
+    max_frames = duration_sec * fps  # Total frames to process (30 seconds)
     frame_count = 0
     
-    # יצירת תיקיית הפלט אם אינה קיימת
+    # Create output folder if it doesn't exist
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
     
@@ -46,29 +46,29 @@ def process_video(video_path, car_image_path, output_folder, threshold=10, durat
 
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         
-        # בדיקה אם הרכב נמצא בפריים
+        # Check if the car is detected in the current frame
         is_detected, kp1, kp2, good_matches = is_car_in_frame(car_image, gray_frame, sift, bf, threshold)
         bool_array.append(is_detected)
 
-        # הצגת הקווים של ההתאמות בין התמונות
-        frame_color = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)  # המרה לצבע לצורך הצגת קווים
+        # Display matching lines between images
+        frame_color = cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)  # Convert to color for displaying lines
         frame_with_matches = cv2.drawMatches(car_image_color, kp1, frame_color, kp2, good_matches, None, 
                                              matchColor=(0, 255, 0), singlePointColor=None, 
                                              flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         
-        # הוספת התראה על המסך אם הרכב זוהה
+        # Add an alert on the screen if the car is detected
         if is_detected:
             cv2.putText(frame_with_matches, 'Car Detected!', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         
-        # שמירת התמונה עם התוצאה
+        # Save the result image with detection info
         result_text = 'True' if is_detected else 'False'
         output_filename = os.path.join(output_folder, f"frame_{frame_count + 1}_{result_text}.png")
         cv2.imwrite(output_filename, frame_with_matches)
 
-        # הצגת הווידאו
+        # Uncomment this section to display the video in real-time
         # cv2.imshow('Video', frame_with_matches)
         
-        # if cv2.waitKey(1) & 0xFF == ord('q'):  # יציאה מהווידאו בלחיצה על Q
+        # if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'Q' to exit the video
         #     break
         
         frame_count += 1
@@ -78,7 +78,7 @@ def process_video(video_path, car_image_path, output_folder, threshold=10, durat
     
     return bool_array
 
-# שימוש בקוד
+# Usage of the code
 video_path = 'rentis_road.mp4'
 car_image_path = 'red_track.png'
 output_folder = 'output_frames'
