@@ -7,27 +7,11 @@ import math
 # from Functions.object_tracking import track_frames
 from collections import defaultdict
 def find_current_index(current_bbox, positions):
-    """
-    Find the index of the current bounding box in the list of previous bounding boxes.
-
-    Parameters:
-    - current_bbox: The current bounding box (x, y, width, height).
-    - positions: A list of previous bounding boxes with their corresponding data.
-
-    Returns:
-    - The index of the current bounding box in the positions list, or -1 if not found.
-    """
-    for index, position in enumerate(positions):
-        bbox = position['bbox']
-        
-        # Compare the current bounding box with the stored bounding box
-        if (bbox[0] == current_bbox[0] and
-            bbox[1] == current_bbox[1] and
-            bbox[2] == current_bbox[2] and
-            bbox[3] == current_bbox[3]):
-            return index  # Found the index of the current bounding box
-
+    for index, bbox in enumerate(positions):
+        if bbox['bbox'] == current_bbox:
+            return index
     return -1  # Return -1 if the current bounding box is not found
+
 
 def calculate_slope(previous_position, current_position):
     # Computes the slope between two positions
@@ -39,7 +23,7 @@ def calculate_slope(previous_position, current_position):
         return float('inf')  # Infinite slope
     return (y2 - y1) / (x2 - x1)  # Calculate slope
 
-def is_collision_from_different_directions(obj1, current_bbox1, obj2, current_bbox2):
+def is_collision_from_different_directions(current_bbox1, current_bbox2,obj1, obj2 ):
     # Checks if two objects are moving from different directions based on their bounding boxes
     positions1 = obj1['Bounding Boxes']
     positions2 = obj2['Bounding Boxes']
@@ -101,7 +85,7 @@ def group_objects_by_frame(tracked_objects):
 
     return frame_objects
 
-def check_slope_change(obj1, current_bbox1, obj2, current_bbox2, angle1, angle2):
+def check_slope_change(current_bbox1, current_bbox2,obj1, obj2, angle1, angle2):
     # Check if there is a significant change in slope between the current and next bounding boxes
     positions1 = obj1['Bounding Boxes']
     positions2 = obj2['Bounding Boxes']
@@ -144,21 +128,18 @@ def detect_accidents(tracked_objects):
             for j in range(i + 1, len(objects)):
                 obj1, bbox1 = objects[i]
                 obj2, bbox2 = objects[j]
-                print(bbox1)
+                
                 # Check if both objects are cars
-                # Check if both objects are cars and have Bounding Boxes
-                if (obj1.get("Label") == "car" and obj2.get("Label") == "car" and
-                    "Bounding Boxes" in obj1 and "Bounding Boxes" in obj2):
-                    # Ensure the bounding boxes are from the same time frame
-                    if bbox1["datetime"] == bbox2["datetime"]:
+                if obj1["Label"] == "car" and obj2["Label"] == "car":
                         # Check if bounding boxes collide
+
                         if is_bbox_collision(bbox1["bbox"], bbox2["bbox"]):
                             # Check if the cars are coming from different directions
-                            different_directions, angle1, angle2 = is_collision_from_different_directions(bbox1, bbox2, obj1, obj2)
+                            different_directions, angle1, angle2 = is_collision_from_different_directions(bbox1["bbox"], bbox2["bbox"], obj1, obj2)
                             if different_directions:
                                # Check for significant slope change
-                               if check_slope_change(bbox1, bbox2, obj1, obj2, angle1, angle2):
-                                        return True, bbox1["frame_id"]  # Return True and the frame ID of the collision
+                               if check_slope_change(bbox1["bbox"], bbox2["bbox"], obj1, obj2, angle1, angle2):
+                                        return True, frame_id  # Return True and the frame ID of the collision
 
     return False, None  # Return False if no accidents were detected
 
